@@ -1,0 +1,25 @@
+{
+  "name": "CRM RSVP · Tengku Khairi & Joanne",
+  "short_name": "CRM Tetamu",
+  "description": "Portal Pengurusan RSVP & Tetamu Walimatul Urus Tengku Khairi & Joanne",
+  "start_url": "admin",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FDF9F6",
+  "theme_color": "#C87D85",
+  "icons": [
+    {
+      "src": "images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

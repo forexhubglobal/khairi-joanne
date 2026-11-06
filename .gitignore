@@ -1,0 +1,9 @@
+.vercel
+cloudflared.exe
+scratch/
+node_modules/
+*.log
+videos/bursa_ulu_cami.webm
+videos/gold_stage.webm
+videos/mecca_4k.webm
+

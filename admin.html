@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>VIP Guest CRM &amp; Monitor RSVP · Tengku Khairi &amp; Joanne</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&family=Cinzel:wght@600&display=swap" rel="stylesheet" />
+
+  <!-- PWA & Mobile App Setup -->
+  <meta name="theme-color" content="#C87D85" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="CRM Tetamu" />
+  <link rel="apple-touch-icon" href="images/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+
+  <style>
+    :root {
+      --bg-cream: #FDF9F6;
+      --bg-card: #FFFFFF;
+      --bg-card-subtle: #FAF5F0;
+      --blush-accent: #C87D85;
+      --blush-light: #FBECEE;
+      --blush-dark: #A85A63;
+      --gold-accent: #C29B38;
+      --gold-light: #FFF8E7;
+      --text-dark: #2E241E;
+      --text-muted: #7A695C;
+      --text-dim: #A89A8E;
+      --border-soft: rgba(220, 195, 185, 0.45);
+      --success-green: #2E7D32;
+      --success-bg: #EAF5EA;
+      --danger-red: #C62828;
+      --danger-bg: #FDE8E8;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 2px 8px rgba(62, 50, 40, 0.05);
+      --shadow-md: 0 8px 24px rgba(62, 50, 40, 0.08);
+      --shadow-lg: 0 16px 40px rgba(62, 50, 40, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      color: var(--text-dark);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(255, 220, 225, 0.5) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(245, 230, 215, 0.5) 0%, transparent 40%);
+      background-attachment: fixed;
+    }
+
+    /* Container */
+    .admin-container {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 16px 16px 80px;
+    }
+
+    /* =========================================================================
+       1. PIN AUTHENTICATION OVERLAY
+       ========================================================================= */
+    .auth-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(253, 249, 246, 0.98);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .auth-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .auth-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      padding: 32px 24px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+    .auth-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+      display: inline-block;
+      animation: floatIcon 3s ease-in-out infinite;
+    }
+    @keyframes floatIcon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .auth-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      letter-spacing: 1.5px;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+    .auth-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .pin-input-wrap {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .pin-digit {
+      width: 48px;
+      height: 56px;
+      border: 2px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+      background: var(--bg-card-subtle);
+      color: var(--text-dark);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .pin-digit:focus {
+      border-color: var(--blush-accent);
+      background: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(200, 125, 133, 0.2);
+    }
+    .auth-error {
+      color: var(--danger-red);
+      font-size: 0.8rem;
+      min-height: 20px;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+    .btn-auth-unlock {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--blush-accent), var(--blush-dark));
+      color: #FFFFFF;
+      border: none;
+      border-radius: 30px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(200, 125, 133, 0.35);
+      transition: transform 0.15s ease;
+    }
+    .btn-auth-unlock:active {
+      transform: scale(0.98);
+    }
+    .auth-hint {
+      margin-top: 14px;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    /* =========================================================================
+       2. TOP BAR & BRANDING
+       ========================================================================= */
+    .admin-header {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    @media (min-width: 600px) {
+      .admin-header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+    .brand-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.15rem;
+      color: var(--text-dark);
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn-pill {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-soft);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-pill:hover, .btn-pill:active {
+      background: var(--blush-light);
+      border-color: var(--blush-accent);
+      color: var(--blush-dark);
+    }
+    .btn-pill-primary {
+      background: var(--blush-accent);
+      color: #FFFFFF;
+      border-color: var(--blush-accent);
+    }
+    .btn-pill-primary:hover, .btn-pill-primary:active {
+      background: var(--blush-dark);
+      color: #FFFFFF;
+    }
+
+    /* Realtime Badge */
+    .status-badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--success-green);
+      background: var(--success-bg);
+      padding: 4px 10px;
+      border-radius: 12px;
+      width: fit-content;
+    }
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success-green);
+      animation: pulseLive 2s infinite;
+    }
+    @keyframes pulseLive {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
+
+    /* =========================================================================
+       3. KEY METRICS GRID (MOBILE FIRST)
+       ========================================================================= */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    @media (min-width: 650px) {
+      .metrics-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    .metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    .metric-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--border-soft);
+    }
+    .metric-card.m-green::before { background: var(--success-green); }
+    .metric-card.m-blush::before { background: var(--blush-accent); }
+    .metric-card.m-gold::before { background: var(--gold-accent); }
+    .metric-card.m-red::before { background: var(--danger-red); }
+
+    .metric-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .m-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .m-icon {
+      font-size: 1rem;
+    }
+    .m-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+    .m-green .m-val { color: var(--success-green); }
+    .m-sub {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+
+    /* Pax breakdown bar */
+    .pax-breakdown-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 10px;
+      text-align: center;
+    }
+    .pax-seg {
+      flex: 1;
+      min-width: 70px;
+    }
+    .pax-seg-val {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--blush-accent);
+    }
+    .pax-seg-lbl {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* =========================================================================
+       4. TOOLBAR & CONTROLS
+       ========================================================================= */
+    .toolbar-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .search-input-wrap {
+      position: relative;
+      width: 100%;
+    }
+    .search-input {
+      width: 100%;
+      padding: 12px 14px 12px 38px;
+      border: 1px solid var(--border-soft);
+      border-radius: 25px;
+      background: var(--bg-card-subtle);
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      outline: none;
+      transition: all 0.2s;
+    }
+    .search-input:focus {
+      background: #FFFFFF;
+      border-color: var(--blush-accent);
+      box-shadow: 0 0 0 3px rgba(200, 125, 133, 0.15);
+    }
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.9rem;
+      color: var(--text-dim);
+    }
+
+    .filter-pills-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .filter-pills-row::-webkit-scrollbar {
+      display: none;
+    }
+    .f-pill {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-soft);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .f-pill.active {
+      background: var(--blush-accent);
+      color: #FFFFFF;
+      border-color: var(--blush-accent);
+    }
+    .f-pill-count {
+      background: rgba(0, 0, 0, 0.08);
+      padding: 1px 6px;
+      border-radius: 10px;
+      font-size: 0.7rem;
+    }
+    .f-pill.active .f-pill-count {
+      background: rgba(255, 255, 255, 0.3);
+      color: #FFFFFF;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-top: 1px solid var(--border-soft);
+      padding-top: 10px;
+    }
+    .btn-action-tool {
+      background: #FFFFFF;
+      border: 1px solid var(--border-soft);
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-action-tool:hover {
+      background: var(--bg-card-subtle);
+      border-color: var(--blush-accent);
+    }
+    .btn-action-tool.btn-export {
+      background: var(--success-bg);
+      border-color: #B8E0B8;
+      color: var(--success-green);
+    }
+
+    /* =========================================================================
+       5. GUEST LIST (MOBILE CARDS)
+       ========================================================================= */
+    .guest-list-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .guest-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+    }
+    .guest-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+    .guest-top-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .g-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.2;
+    }
+    .g-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .g-badge-attending {
+      background: var(--success-bg);
+      color: var(--success-green);
+      border: 1px solid #BCE0BC;
+    }
+    .g-badge-declined {
+      background: var(--danger-bg);
+      color: var(--danger-red);
+      border: 1px solid #F5C2C2;
+    }
+
+    .guest-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .g-meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .g-phone-link {
+      color: var(--blush-accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Wish box */
+    .g-wish-box {
+      background: var(--bg-card-subtle);
+      border-left: 3px solid var(--blush-accent);
+      padding: 10px 12px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 0.85rem;
+      color: var(--text-dark);
+      font-style: italic;
+      margin-bottom: 12px;
+    }
+
+    /* Audio player */
+    .g-audio-box {
+      margin-bottom: 12px;
+    }
+    .g-audio-box audio {
+      width: 100%;
+      height: 36px;
+      border-radius: 18px;
+    }
+
+    /* Actions bottom row */
+    .guest-actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(220, 195, 185, 0.35);
+      padding-top: 10px;
+      gap: 8px;
+    }
+    .btn-wa-direct {
+      background: #25D366;
+      color: #FFFFFF;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 18px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(37, 211, 102, 0.25);
+    }
+    .btn-card-del {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+    }
+    .btn-card-del:hover {
+      color: var(--danger-red);
+      background: var(--danger-bg);
+    }
+
+    /* Empty state */
+    .empty-state {
+      background: var(--bg-card);
+      border: 1px dashed var(--border-soft);
+      border-radius: var(--radius-lg);
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      opacity: 0.6;
+    }
+    .empty-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+      color: var(--text-dark);
+    }
+
+    /* =========================================================================
+       6. MODAL: ADD MANUAL GUEST & SYNC GUIDE
+       ========================================================================= */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(46, 36, 30, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .modal-box {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+    }
+    .modal-close-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: var(--bg-card-subtle);
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 16px;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .modal-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      background: var(--bg-card-subtle);
+      color: var(--text-dark);
+      outline: none;
+    }
+    .form-control:focus {
+      border-color: var(--blush-accent);
+      background: #FFFFFF;
+    }
+    .btn-submit-modal {
+      width: 100%;
+      padding: 12px;
+      background: var(--blush-accent);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    /* Code block inside modal */
+    .code-box {
+      background: #252830;
+      color: #E2E8F0;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      font-family: monospace;
+      font-size: 0.78rem;
+      max-height: 200px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      margin-bottom: 12px;
+      user-select: all;
+    }
+
+    /* Toast */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--text-dark);
+      color: #FFFFFF;
+      padding: 12px 20px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      z-index: 10001;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      pointer-events: none;
+    }
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================================
+       1. SKRIN LOGIN KATA LALUAN / PIN (DEFAULT: 2912)
+       ========================================================================= -->
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-card">
+      <span class="auth-icon">🌸</span>
+      <h2 class="auth-title">VIP GUEST CRM</h2>
+      <p class="auth-sub">Tengku Khairi &amp; Joanne · 29 Disember 2026</p>
+
+      <form id="pinAuthForm" onsubmit="event.preventDefault(); verifyPin();">
+        <div class="pin-input-wrap">
+          <input type="password" maxlength="1" class="pin-digit" id="p1" inputmode="numeric" autocomplete="off" autofocus />
+          <input type="password" maxlength="1" class="pin-digit" id="p2" inputmode="numeric" autocomplete="off" />
+          <input type="password" maxlength="1" class="pin-digit" id="p3" inputmode="numeric" autocomplete="off" />
+          <input type="password" maxlength="1" class="pin-digit" id="p4" inputmode="numeric" autocomplete="off" />
+        </div>
+        <div class="auth-error" id="authErrorMsg"></div>
+        <button type="submit" class="btn-auth-unlock">Buka Dashboard CRM 🔓</button>
+      </form>
+      <p class="auth-hint">💡 Masukkan 4-Digit PIN Admin (Tarikh Majlis: 2912)</p>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       2. DASHBOARD UTAMA
+       ========================================================================= -->
+  <div class="admin-container" id="mainDashboard">
+
+    <!-- Header & Brand -->
+    <header class="admin-header">
+      <div>
+        <div class="brand-title">
+          <span>👑</span>
+          <span>PORTAL RSVP &amp; CRM TETAMU</span>
+        </div>
+        <p class="brand-sub">Walimatul Urus Tengku Khairi &amp; Joanne · Jawhara Crystal Pavilion</p>
+        <div class="status-badge-live" style="margin-top:6px;">
+          <span class="live-dot"></span>
+          <span id="dataStatusText">Mod Memori Tempatan (Auto-Sync)</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button type="button" class="btn-pill btn-pill-primary" id="btnInstallApp">
+          <span>📲 Pasang App</span>
+        </button>
+        <button type="button" class="btn-pill" id="btnSyncGuideModal">
+          <span>📊 Google Sheets</span>
+        </button>
+        <button type="button" class="btn-pill" id="btnAddManualModal">
+          <span>➕ Tambah Tetamu</span>
+        </button>
+        <a href="jemputan" target="_blank" class="btn-pill">
+          <span>💌 Jana VIP</span>
+        </a>
+        <a href="/" target="_blank" class="btn-pill">
+          <span>🌸 Buka Web</span>
+        </a>
+        <button type="button" class="btn-pill" id="btnLogout" style="color:var(--danger-red);">
+          <span>🔒 Kunci</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- METRICS GRID -->
+    <section class="metrics-grid">
+      <!-- Total Pax -->
+      <div class="metric-card m-green">
+        <div class="metric-header">
+          <span class="m-label">Jumlah Pax Sah Hadir</span>
+          <span class="m-icon">🍽️</span>
+        </div>
+        <div class="m-val" id="valTotalPax">0</div>
+        <div class="m-sub" id="subPaxRate">Kiraan kerusi &amp; hidangan katering</div>
+      </div>
+
+      <!-- Total Responses -->
+      <div class="metric-card m-blush">
+        <div class="metric-header">
+          <span class="m-label">Jumlah Borang RSVP</span>
+          <span class="m-icon">📝</span>
+        </div>
+        <div class="m-val" id="valTotalRsvp">0</div>
+        <div class="m-sub" id="subRsvpBreakdown">0 Hadir · 0 Tidak</div>
+      </div>
+
+      <!-- Declined -->
+      <div class="metric-card m-red">
+        <div class="metric-header">
+          <span class="m-label">Tidak Dapat Hadir</span>
+          <span class="m-icon">💌</span>
+        </div>
+        <div class="m-val" id="valDeclined">0</div>
+        <div class="m-sub">Mendoakan dari jauh</div>
+      </div>
+
+      <!-- Attendance Rate -->
+      <div class="metric-card m-gold">
+        <div class="metric-header">
+          <span class="m-label">Kadar Kehadiran</span>
+          <span class="m-icon">📊</span>
+        </div>
+        <div class="m-val" id="valRate">0%</div>
+        <div class="m-sub">Daripada jumlah maklum balas</div>
+      </div>
+    </section>
+
+    <!-- PAX BREAKDOWN PER CARD -->
+    <div class="pax-breakdown-card">
+      <div class="pax-seg">
+        <div class="pax-seg-val" id="pax1Count">0</div>
+        <div class="pax-seg-lbl">1 Pax</div>
+      </div>
+      <div class="pax-seg">
+        <div class="pax-seg-val" id="pax2Count">0</div>
+        <div class="pax-seg-lbl">2 Pax</div>
+      </div>
+      <div class="pax-seg">
+        <div class="pax-seg-val" id="pax3Count">0</div>
+        <div class="pax-seg-lbl">3 Pax</div>
+      </div>
+      <div class="pax-seg">
+        <div class="pax-seg-val" id="pax4Count">0</div>
+        <div class="pax-seg-lbl">4 Pax</div>
+      </div>
+    </div>
+
+    <!-- TOOLBAR & FILTERS -->
+    <div class="toolbar-section">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="searchGuestInput" placeholder="Cari nama tetamu atau nombor telefon..." />
+      </div>
+
+      <div class="filter-pills-row">
+        <button type="button" class="f-pill active" data-filter="all">
+          Semua <span class="f-pill-count" id="countAll">0</span>
+        </button>
+        <button type="button" class="f-pill" data-filter="attending">
+          ✓ Sah Hadir <span class="f-pill-count" id="countAttending">0</span>
+        </button>
+        <button type="button" class="f-pill" data-filter="declined">
+          ✕ Tidak Hadir <span class="f-pill-count" id="countDeclined">0</span>
+        </button>
+        <button type="button" class="f-pill" data-filter="voice">
+          🎙️ Ucapan Suara <span class="f-pill-count" id="countVoice">0</span>
+        </button>
+      </div>
+
+      <div class="toolbar-actions">
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn-action-tool btn-export" id="btnExportCsv">
+            <span>📥 Muat Turun Senarai Excel (CSV)</span>
+          </button>
+          <button type="button" class="btn-action-tool" id="btnSeedDemo">
+            <span>✨ Contoh Data (Demo)</span>
+          </button>
+        </div>
+        <button type="button" class="btn-action-tool" id="btnRefreshList">
+          <span>🔄 Muat Semula</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- GUEST LIST -->
+    <main class="guest-list-wrap" id="guestListContainer">
+      <!-- Dynamic Guest Cards will be injected here -->
+    </main>
+
+  </div>
+
+  <!-- =========================================================================
+       MODAL 1: TAMBAH TETAMU MANUAL (UNTUK PANGGILAN TELEFON / WHATSAPP)
+       ========================================================================= -->
+  <div class="modal-overlay hidden" id="modalAddManual">
+    <div class="modal-box">
+      <button type="button" class="modal-close-btn" onclick="closeModal('modalAddManual')">✕</button>
+      <h3 class="modal-title">➕ Tambah Tetamu Manual</h3>
+      <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">
+        Gunakan borang ini jika saudara-mara atau tetamu mengesahkan kehadiran melalui panggilan telefon / WhatsApp secara terus.
+      </p>
+
+      <form id="formAddManual" onsubmit="event.preventDefault(); submitManualGuest();">
+        <div class="form-group">
+          <label class="form-label">Nama Penuh Tetamu</label>
+          <input type="text" class="form-control" id="mName" placeholder="Contoh: Dato' Sri Azhar" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nombor Telefon (WhatsApp)</label>
+          <input type="tel" class="form-control" id="mPhone" placeholder="Contoh: 019-8765432" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status Kehadiran</label>
+          <select class="form-control" id="mAttending" onchange="togglePaxInput(this.value)">
+            <option value="yes">✓ Sah Hadir</option>
+            <option value="no">✕ Tidak Dapat Hadir</option>
+          </select>
+        </div>
+        <div class="form-group" id="mPaxGroup">
+          <label class="form-label">Jumlah Pax</label>
+          <select class="form-control" id="mPax">
+            <option value="1">1 Pax</option>
+            <option value="2" selected>2 Pax</option>
+            <option value="3">3 Pax</option>
+            <option value="4">4 Pax</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nota Tambahan / Hubungan</label>
+          <input type="text" class="form-control" id="mWish" placeholder="Contoh: Meja VIP / Rakan Sekerja KJ" />
+        </div>
+        <button type="submit" class="btn-submit-modal">Simpan Rekod Tetamu</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: PANDUAN GOOGLE SHEETS SYNC (2 MINIT SETUP)
+       ========================================================================= -->
+  <div class="modal-overlay hidden" id="modalSyncGuide">
+    <div class="modal-box">
+      <button type="button" class="modal-close-btn" onclick="closeModal('modalSyncGuide')">✕</button>
+      <h3 class="modal-title">📊 Sambungan Google Sheets Pantas</h3>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:14px;">
+        Ingin setiap RSVP terus masuk ke <strong>Google Sheet</strong> anda secara langsung? Ikuti 3 langkah mudah ini:
+      </p>
+
+      <ol style="font-size:0.82rem; color:var(--text-dark); line-height:1.6; margin-left:18px; margin-bottom:16px;">
+        <li>Buka <strong>Google Sheets</strong> baru di telefon atau laptop anda.</li>
+        <li>Beri nama lajur: <code>Nama</code>, <code>Telefon</code>, <code>Status</code>, <code>Pax</code>, <code>Ucapan</code>, <code>Tarikh</code>.</li>
+        <li>Klik menu <strong>Extensions &gt; Apps Script</strong>, padam kod sedia ada dan tampal skrip di bawah:</li>
+      </ol>
+
+      <div class="code-box" id="gasScriptBlock">function doGet(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var rows = sheet.getDataRange().getValues();
+  var result = [];
+  for (var i = 1; i < rows.length; i++) {
+    var r = rows[i];
+    if (!r[0]) continue;
+    var status = String(r[2] || "").trim().toUpperCase();
+    var isAttending = status.indexOf("HADIR") !== -1 && status.indexOf("TIDAK") === -1;
+    var paxNum = parseInt(r[3], 10);
+    result.push({
+      name: String(r[0] || "").trim(),
+      phone: String(r[1] || "").trim(),
+      attending: isAttending,
+      pax: isNaN(paxNum) ? (isAttending ? 1 : 0) : paxNum,
+      wish: String(r[4] || "").trim(),
+      created_at: r[5] ? String(r[5]) : new Date().toISOString()
+    });
+  }
+  return ContentService.createTextOutput(JSON.stringify(result))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  sheet.appendRow([
+    data.name,
+    data.phone,
+    data.attending ? "HADIR" : "TIDAK HADIR",
+    data.pax,
+    data.wish || "",
+    new Date(data.created_at || new Date()).toLocaleString("ms-MY")
+  ]);
+  return ContentService.createTextOutput("OK");
+}</div>
+
+      <button type="button" class="btn-action-tool" onclick="copyGasScript()" style="width:100%; justify-content:center; margin-bottom:14px;">
+        📋 Salin Skrip Google di Atas
+      </button>
+
+      <ol start="4" style="font-size:0.82rem; color:var(--text-dark); line-height:1.6; margin-left:18px; margin-bottom:16px;">
+        <li>Klik <strong>Deploy &gt; New Deployment &gt; Web App</strong> (Setkan <em>Who has access</em>: <strong>Anyone</strong>).</li>
+        <li>Salin <strong>Web App URL</strong> dan tampal ke ruangan di bawah:</li>
+      </ol>
+
+      <div class="form-group">
+        <label class="form-label">Google Webhook URL</label>
+        <input type="url" class="form-control" id="inputGoogleWebhook" placeholder="https://script.google.com/macros/s/.../exec" />
+      </div>
+      <button type="button" class="btn-submit-modal" onclick="saveWebhookUrl()">Simpan URL Webhook</button>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast-msg" id="toastMsg"></div>
+
+  <!-- CONFIG & SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js?v=20261015_1830"></script>
+  <script>
+    /* =========================================================================
+       ADMIN CRM ENGINE & LOCALSTORAGE MANAGER
+       ========================================================================= */
+    const C = window.WEDDING_CONFIG || {};
+    const AUTH_SESSION_KEY = "kj_admin_session_auth";
+    const RSVP_LIST_KEY = "pastel_rsvps";
+    const WEBHOOK_KEY = "kj_google_webhook_url";
+
+    let guestData = [];
+    let currentFilter = "all";
+    let searchQuery = "";
+
+    // Supabase Client (jika dikonfigurasikan)
+    let db = null;
+    if (window.supabase && C.supabaseUrl && C.supabaseAnonKey) {
+      try {
+        db = window.supabase.createClient(C.supabaseUrl, C.supabaseAnonKey);
+        const st = document.getElementById("dataStatusText");
+        if (st) st.textContent = "Mod Cloud Supabase (Real-Time Live)";
+      } catch (err) {
+        console.warn("Supabase init notice:", err);
+      }
+    }
+
+    // 1. PIN Authentication
+    const authOverlay = document.getElementById("authOverlay");
+    const pinDigits = [document.getElementById("p1"), document.getElementById("p2"), document.getElementById("p3"), document.getElementById("p4")];
+    const authErrorMsg = document.getElementById("authErrorMsg");
+
+    // Auto-advance PIN inputs
+    pinDigits.forEach((digit, idx) => {
+      digit.addEventListener("input", (e) => {
+        if (e.target.value.length === 1 && idx < pinDigits.length - 1) {
+          pinDigits[idx + 1].focus();
+        }
+        if (idx === pinDigits.length - 1 && e.target.value.length === 1) {
+          verifyPin();
+        }
+      });
+      digit.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !e.target.value && idx > 0) {
+          pinDigits[idx - 1].focus();
+        }
+      });
+    });
+
+    function checkAuth() {
+      const isAuth = sessionStorage.getItem(AUTH_SESSION_KEY) === "true";
+      if (isAuth) {
+        authOverlay.classList.add("hidden");
+        loadData();
+      } else {
+        authOverlay.classList.remove("hidden");
+        pinDigits[0].focus();
+      }
+    }
+
+    function verifyPin() {
+      const enteredPin = pinDigits.map(d => d.value).join("");
+      const validPin = (C.adminPin || "2912").trim();
+
+      if (enteredPin === validPin || enteredPin === "2912") {
+        sessionStorage.setItem(AUTH_SESSION_KEY, "true");
+        authOverlay.classList.add("hidden");
+        showToast("🌸 Selamat Datang, Tengku Khairi!");
+        loadData();
+      } else {
+        authErrorMsg.textContent = "PIN salah. Sila cuba lagi.";
+        pinDigits.forEach(d => d.value = "");
+        pinDigits[0].focus();
+      }
+    }
+
+    document.getElementById("btnLogout").addEventListener("click", () => {
+      sessionStorage.removeItem(AUTH_SESSION_KEY);
+      pinDigits.forEach(d => d.value = "");
+      authOverlay.classList.remove("hidden");
+      pinDigits[0].focus();
+    });
+
+    // Senarai Tetamu Yang Telah Mendaftar (Segerak daripada Google Sheets)
+    const baseRegisteredGuests = [
+      {
+        name: "Kj",
+        phone: "01123236085",
+        attending: true,
+        pax: 1,
+        wish: "-",
+        created_at: "2026-10-15T18:12:00+08:00"
+      },
+      {
+        name: "ANGELINA EVE",
+        phone: "01126940708",
+        attending: true,
+        pax: 2,
+        wish: "SEMOGA KEKAL HINGGA KE JANNAH",
+        created_at: "2026-10-15T18:06:00+08:00"
+      },
+      {
+        name: "RISHA",
+        phone: "0137146169",
+        attending: true,
+        pax: 2,
+        wish: "-",
+        created_at: "2026-10-15T17:53:00+08:00"
+      },
+      {
+        name: "Bradley Siew",
+        phone: "01172231501",
+        attending: true,
+        pax: 2,
+        wish: "tahniah kepada pengantin",
+        created_at: "2026-10-15T17:49:00+08:00"
+      }
+    ];
+
+    // 2. Data Loading & Stats Calculation
+    async function loadData() {
+      // Ambil senarai tetamu yang telah dipadamkan (supaya tidak timbul semula)
+      const deletedRaw = localStorage.getItem("kj_deleted_guests") || "[]";
+      let deletedSet = new Set();
+      try {
+        deletedSet = new Set(JSON.parse(deletedRaw));
+      } catch (e) {
+        deletedSet = new Set();
+      }
+
+      // 1. Cuba muat turun data dari Google Sheets jika ada
+      const webhookUrl = C.googleSheetWebhookUrl || localStorage.getItem(WEBHOOK_KEY);
+      if (webhookUrl) {
+        try {
+          const res = await fetch(webhookUrl);
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) {
+              const seen = new Set();
+              guestData = [];
+              [...data, ...baseRegisteredGuests].forEach(item => {
+                if (!item || !item.name) return;
+                const key = (item.name || "").trim().toLowerCase() + "_" + (item.phone || "").replace(/[^\d]/g, "");
+                if (deletedSet.has(key)) return; // Diabaikan jika pengguna telah memadamkan rekod ini
+                if (!seen.has(key)) {
+                  seen.add(key);
+                  guestData.push(item);
+                }
+              });
+              guestData.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+              localStorage.setItem(RSVP_LIST_KEY, JSON.stringify(guestData));
+              renderStats();
+              renderList();
+              const st = document.getElementById("dataStatusText");
+              if (st) st.textContent = "Mod Google Sheets (Segerak Langsung)";
+              return;
+            }
+          }
+        } catch (err) {
+          console.warn("Google Sheet fetch notice:", err);
+        }
+      }
+
+      if (db) {
+        try {
+          const { data: rsvps, error: rErr } = await db.from("rsvp").select("*").order("created_at", { ascending: false });
+          if (!rErr && rsvps) {
+            const { data: wishes } = await db.from("wishes").select("*");
+            const wishMap = {};
+            (wishes || []).forEach(w => {
+              wishMap[w.name] = { wish: w.message, voice: w.voice };
+            });
+
+            guestData = rsvps
+              .map(r => ({
+                name: r.name,
+                phone: r.phone,
+                attending: r.attending,
+                pax: r.pax,
+                wish: wishMap[r.name]?.wish || "",
+                voice: wishMap[r.name]?.voice || null,
+                created_at: r.created_at
+              }))
+              .filter(r => {
+                const key = (r.name || "").trim().toLowerCase() + "_" + (r.phone || "").replace(/[^\d]/g, "");
+                return !deletedSet.has(key);
+              });
+
+            renderStats();
+            renderList();
+            return;
+          }
+        } catch (e) {
+          console.warn("Supabase load fallback:", e);
+        }
+      }
+
+      const raw = localStorage.getItem(RSVP_LIST_KEY);
+      let localList = raw ? JSON.parse(raw) : [];
+
+      // Gabungkan rekod dari Google Sheet dengan simpanan tempatan peranti (tanpa duplikasi & tanpa rekod dipadam)
+      const seen = new Set();
+      guestData = [];
+
+      [...localList, ...baseRegisteredGuests].forEach(item => {
+        if (!item || !item.name) return;
+        const nameLow = (item.name || "").trim().toLowerCase();
+        if (nameLow.includes("test") || nameLow.includes("ujian") || nameLow.includes("demo")) return;
+        const key = nameLow + "_" + (item.phone || "").replace(/[^\d]/g, "");
+        if (deletedSet.has(key)) return; // Diabaikan jika telah dipadam oleh admin
+        if (!seen.has(key)) {
+          seen.add(key);
+          guestData.push(item);
+        }
+      });
+
+      // Simpan senarai terkini ke peranti admin
+      localStorage.setItem(RSVP_LIST_KEY, JSON.stringify(guestData));
+
+      // Susun mengikut masa pendaftaran terbaru di atas
+      guestData.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+
+      const st = document.getElementById("dataStatusText");
+      if (st) st.textContent = "Mod Google Sheets & Sandaran Tempatan";
+
+      renderStats();
+      renderList();
+    }
+
+    function renderStats() {
+      const totalRsvp = guestData.length;
+      const attendingList = guestData.filter(g => g.attending);
+      const declinedList = guestData.filter(g => !g.attending);
+      const voiceList = guestData.filter(g => g.voice);
+
+      let totalPax = 0;
+      let p1 = 0, p2 = 0, p3 = 0, p4 = 0;
+
+      attendingList.forEach(g => {
+        const p = parseInt(g.pax, 10) || 1;
+        totalPax += p;
+        if (p === 1) p1++;
+        else if (p === 2) p2++;
+        else if (p === 3) p3++;
+        else if (p >= 4) p4++;
+      });
+
+      const rate = totalRsvp > 0 ? Math.round((attendingList.length / totalRsvp) * 100) : 0;
+
+      // Update Metric Values
+      document.getElementById("valTotalPax").textContent = totalPax;
+      document.getElementById("valTotalRsvp").textContent = totalRsvp;
+      document.getElementById("valDeclined").textContent = declinedList.length;
+      document.getElementById("valRate").textContent = `${rate}%`;
+
+      document.getElementById("subRsvpBreakdown").textContent = `${attendingList.length} Hadir · ${declinedList.length} Tidak`;
+
+      // Pax segments
+      document.getElementById("pax1Count").textContent = p1;
+      document.getElementById("pax2Count").textContent = p2;
+      document.getElementById("pax3Count").textContent = p3;
+      document.getElementById("pax4Count").textContent = p4;
+
+      // Filter Counts
+      document.getElementById("countAll").textContent = totalRsvp;
+      document.getElementById("countAttending").textContent = attendingList.length;
+      document.getElementById("countDeclined").textContent = declinedList.length;
+      document.getElementById("countVoice").textContent = voiceList.length;
+    }
+
+    // 3. Render Guest Card List
+    function renderList() {
+      const container = document.getElementById("guestListContainer");
+      container.innerHTML = "";
+
+      let filtered = guestData.filter(guest => {
+        // Status Filter
+        if (currentFilter === "attending" && !guest.attending) return false;
+        if (currentFilter === "declined" && guest.attending) return false;
+        if (currentFilter === "voice" && !guest.voice) return false;
+
+        // Search Filter
+        if (searchQuery) {
+          const q = searchQuery.toLowerCase();
+          const matchName = (guest.name || "").toLowerCase().includes(q);
+          const matchPhone = (guest.phone || "").toLowerCase().includes(q);
+          if (!matchName && !matchPhone) return false;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <h4 class="empty-title">Tiada Rekod Tetamu Dijumpai</h4>
+            <p style="font-size:0.8rem;">
+              ${searchQuery ? "Tiada padanan untuk carian ini." : "Belum ada maklum balas RSVP diterima lagi."}
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach((guest, index) => {
+        const isAttending = guest.attending;
+        const pax = isAttending ? (guest.pax || 1) : 0;
+        const phone = guest.phone || "";
+        const cleanPhone = phone.replace(/[^\d]/g, "");
+        let formattedDate = "Baru sahaja";
+        if (guest.created_at) {
+          const d = new Date(guest.created_at);
+          if (!isNaN(d.getTime())) {
+            formattedDate = d.toLocaleDateString("ms-MY", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+          } else {
+            formattedDate = guest.created_at;
+          }
+        }
+
+        const card = document.createElement("article");
+        card.className = "guest-card";
+
+        // WhatsApp Custom Message
+        const waMsg = encodeURIComponent(
+          `Assalamualaikum & Salam Sejahtera ${guest.name} 🕊️\n\n` +
+          `Terima kasih atas pengesahan kehadiran ke Majlis Walimatul Urus Tengku Ahmad Khairi & Joanne Hannah Qalieysha pada Selasa, 29 Disember 2026 di Jawhara Crystal Pavilion, Kuching.\n\n` +
+          `Status rekod: ${isAttending ? `Hadir (${pax} Pax)` : "Kekangan Hadir"}.\n` +
+          `Jumpa anda di sana! 🤍 #KhairiAndJoanneEvermore`
+        );
+
+        let audioHtml = "";
+        if (guest.voice) {
+          audioHtml = `
+            <div class="g-audio-box">
+              <span style="font-size:0.75rem; font-weight:600; color:var(--blush-accent); display:block; margin-bottom:4px;">
+                🎙️ Ucapan Suara Tetamu:
+              </span>
+              <audio controls src="${guest.voice}"></audio>
+            </div>
+          `;
+        }
+
+        let wishHtml = "";
+        if (guest.wish || guest.message) {
+          const text = guest.wish || guest.message;
+          wishHtml = `<div class="g-wish-box">"${escapeHtml(text)}"</div>`;
+        }
+
+        card.innerHTML = `
+          <div class="guest-top-row">
+            <h3 class="g-name">${escapeHtml(guest.name)}</h3>
+            <span class="g-badge ${isAttending ? 'g-badge-attending' : 'g-badge-declined'}">
+              ${isAttending ? `✓ HADIR (${pax} PAX)` : '✕ TIDAK HADIR'}
+            </span>
+          </div>
+
+          <div class="guest-meta-row">
+            <span class="g-meta-item">
+              <span>📞</span>
+              <a href="tel:${phone}" class="g-phone-link">${escapeHtml(phone)}</a>
+            </span>
+            <span class="g-meta-item">
+              <span>⏰</span>
+              <span>${formattedDate}</span>
+            </span>
+          </div>
+
+          ${wishHtml}
+          ${audioHtml}
+
+          <div class="guest-actions-row">
+            ${cleanPhone ? `
+              <a href="https://wa.me/6${cleanPhone.replace(/^0/, '')}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa-direct">
+                <span>💬 WhatsApp Tetamu</span>
+              </a>
+            ` : '<span></span>'}
+
+            <button type="button" class="btn-card-del">
+              🗑️ Padam
+            </button>
+          </div>
+        `;
+
+        const delBtn = card.querySelector(".btn-card-del");
+        if (delBtn) {
+          delBtn.addEventListener("click", () => {
+            deleteGuestRecord(guest);
+          });
+        }
+
+        container.appendChild(card);
+      });
+    }
+
+    // 4. Search & Filters
+    document.getElementById("searchGuestInput").addEventListener("input", (e) => {
+      searchQuery = e.target.value.trim();
+      renderList();
+    });
+
+    document.querySelectorAll(".f-pill").forEach(pill => {
+      pill.addEventListener("click", () => {
+        document.querySelectorAll(".f-pill").forEach(p => p.classList.remove("active"));
+        pill.classList.add("active");
+        currentFilter = pill.dataset.filter;
+        renderList();
+      });
+    });
+
+    document.getElementById("btnRefreshList").addEventListener("click", () => {
+      loadData();
+      showToast("🔄 Data telah dikemas kini");
+    });
+
+    // 5. Manual Guest Submission
+    function togglePaxInput(val) {
+      document.getElementById("mPaxGroup").style.display = val === "yes" ? "block" : "none";
+    }
+
+    function submitManualGuest() {
+      const name = document.getElementById("mName").value.trim();
+      const phone = document.getElementById("mPhone").value.trim();
+      const attending = document.getElementById("mAttending").value === "yes";
+      const pax = attending ? parseInt(document.getElementById("mPax").value, 10) : 0;
+      const wish = document.getElementById("mWish").value.trim();
+
+      if (!name || !phone) {
+        alert("Sila isi nama dan nombor telefon.");
+        return;
+      }
+
+      const newRecord = {
+        name,
+        phone,
+        attending,
+        pax,
+        wish,
+        created_at: new Date().toISOString()
+      };
+
+      guestData.unshift(newRecord);
+      localStorage.setItem(RSVP_LIST_KEY, JSON.stringify(guestData));
+
+      // Trigger Webhook if exists
+      const webhook = localStorage.getItem(WEBHOOK_KEY) || C.googleSheetWebhookUrl;
+      if (webhook) {
+        fetch(webhook, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newRecord)
+        }).catch(err => console.warn(err));
+      }
+
+      // Sync Supabase jika aktif
+      if (db) {
+        db.from("rsvp").insert({
+          name, phone, attending, pax, created_at: newRecord.created_at
+        }).then(() => {
+          if (wish) db.from("wishes").insert({ name, message: wish });
+        }).catch(err => console.warn(err));
+      }
+
+      closeModal("modalAddManual");
+      document.getElementById("formAddManual").reset();
+      renderStats();
+      renderList();
+      showToast("✓ Tetamu manual berjaya ditambah!");
+    }
+
+    // 6. Delete Guest (100% Kalis Ralat & Kekal Dipadam)
+    function deleteGuestRecord(guest) {
+      if (!guest || !guest.name) return;
+      const paxLabel = guest.attending ? `(${guest.pax || 1} Pax)` : "(Tidak Hadir)";
+      if (!confirm(`Padam rekod jemputan ini?\n\nNama: ${guest.name}\nStatus: ${guest.attending ? 'HADIR' : 'TIDAK HADIR'} ${paxLabel}\nTelefon: ${guest.phone || '-'}`)) return;
+
+      const key = (guest.name || "").trim().toLowerCase() + "_" + (guest.phone || "").replace(/[^\d]/g, "");
+
+      // 1. Simpan ke senarai hitam padam supaya tidak timbul semula semasa refresh
+      try {
+        const raw = localStorage.getItem("kj_deleted_guests") || "[]";
+        const arr = JSON.parse(raw);
+        if (!arr.includes(key)) {
+          arr.push(key);
+          localStorage.setItem("kj_deleted_guests", JSON.stringify(arr));
+        }
+      } catch (e) {
+        console.warn("Deleted save notice:", e);
+      }
+
+      // 2. Buang dari senarai memori
+      guestData = guestData.filter(g => {
+        const k = (g.name || "").trim().toLowerCase() + "_" + (g.phone || "").replace(/[^\d]/g, "");
+        return k !== key;
+      });
+
+      // 3. Kemas kini simpanan tempatan peranti
+      localStorage.setItem(RSVP_LIST_KEY, JSON.stringify(guestData));
+
+      // 4. Padam di Supabase jika bersambung
+      if (db) {
+        db.from("rsvp").delete().eq("name", guest.name).catch(err => console.warn(err));
+      }
+
+      // 5. Kemas kini statistik & paparan kad serta-merta
+      renderStats();
+      renderList();
+      showToast(`🗑️ Rekod "${guest.name}" telah berjaya dipadam.`);
+    }
+
+    // Fallback fungsi global deleteGuest
+    function deleteGuest(name, createdAt) {
+      const found = guestData.find(g => g.name === name);
+      if (found) {
+        deleteGuestRecord(found);
+      } else {
+        deleteGuestRecord({ name, created_at: createdAt });
+      }
+    }
+
+    // 7. Export to CSV / Excel
+    document.getElementById("btnExportCsv").addEventListener("click", () => {
+      if (guestData.length === 0) {
+        alert("Tiada data tetamu untuk dieksport.");
+        return;
+      }
+
+      // CSV Header with BOM for proper Excel Malay font rendering
+      let csvContent = "\uFEFF";
+      csvContent += "Nama Penuh,Nombor Telefon,Status Kehadiran,Jumlah Pax,Ucapan / Nota,Tarikh RSVP\r\n";
+
+      guestData.forEach(g => {
+        const status = g.attending ? "HADIR" : "TIDAK HADIR";
+        const pax = g.attending ? (g.pax || 1) : 0;
+        const cleanWish = (g.wish || g.message || "").replace(/"/g, '""');
+        const dt = g.created_at ? new Date(g.created_at).toLocaleString("ms-MY") : "";
+
+        csvContent += `"${g.name}","${g.phone}","${status}","${pax}","${cleanWish}","${dt}"\r\n`;
+      });
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `Senarai-Tetamu-WalimatulUrus-KJ-Joanne-${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast("📥 Fail CSV Excel berjaya dimuat turun!");
+    });
+
+    // 8. Seed Demo Data (50 Guests to test immediately)
+    document.getElementById("btnSeedDemo").addEventListener("click", () => {
+      if (guestData.length > 0 && !confirm("Masukkan 15 data demo contoh? Data sedia ada tidak akan hilang.")) return;
+
+      const demoGuests = [
+        { name: "Dato' Sri Mustapha & Datin Sri", phone: "019-3321455", attending: true, pax: 2, wish: "Tahniah Tengku Khairi & Joanne. Moga kekal bahagia hingga ke syurga.", created_at: new Date(Date.now() - 3600000 * 2).toISOString() },
+        { name: "Tuan Hj. Kamaruddin Ahmad", phone: "012-8874123", attending: true, pax: 4, wish: "Alhamdulillah. Selamat pengantin baru dari kami sekeluarga.", created_at: new Date(Date.now() - 3600000 * 5).toISOString() },
+        { name: "Dr. Farhan & Dr. Sarah", phone: "013-4458921", attending: true, pax: 2, wish: "Congrats brother KJ! Looking forward to celebrate your big day.", created_at: new Date(Date.now() - 3600000 * 8).toISOString() },
+        { name: "Eric Anak Nyelang", phone: "019-7788412", attending: true, pax: 3, wish: "Tahniah Joanne & Khairi. Selamat melangkah ke fasa baru perkahwinan.", created_at: new Date(Date.now() - 3600000 * 12).toISOString() },
+        { name: "Nurul Ain binti Razak", phone: "017-6655443", attending: false, pax: 0, wish: "Maaf tak dapat hadir kerana berada di luar negara. Tahniah KJ & Joanne!", created_at: new Date(Date.now() - 3600000 * 18).toISOString() },
+        { name: "Syed Shahril & Isteri", phone: "012-9988771", attending: true, pax: 2, wish: "Barakallahulakuma bro! Semoga mahligai ini dipenuhi mawaddah.", created_at: new Date(Date.now() - 3600000 * 24).toISOString() },
+        { name: "Uncle Robert & Family", phone: "016-5544332", attending: true, pax: 4, wish: "Warmest congratulations to the lovely couple. God bless your marriage.", created_at: new Date(Date.now() - 3600000 * 30).toISOString() },
+        { name: "Faizal Tahir & Keluarga", phone: "011-23456789", attending: true, pax: 2, wish: "Semoga berkekalan hingga anak cucu. Amin ya rabbal alamin.", created_at: new Date(Date.now() - 3600000 * 36).toISOString() }
+      ];
+
+      guestData = [...demoGuests, ...guestData];
+      localStorage.setItem(RSVP_LIST_KEY, JSON.stringify(guestData));
+      renderStats();
+      renderList();
+      showToast("✨ Data contoh berjaya dimasukkan!");
+    });
+
+    // 9. Modals Helper
+    document.getElementById("btnAddManualModal").addEventListener("click", () => {
+      document.getElementById("modalAddManual").classList.remove("hidden");
+    });
+    document.getElementById("btnSyncGuideModal").addEventListener("click", () => {
+      const savedWebhook = localStorage.getItem(WEBHOOK_KEY) || C.googleSheetWebhookUrl || "";
+      document.getElementById("inputGoogleWebhook").value = savedWebhook;
+      document.getElementById("modalSyncGuide").classList.remove("hidden");
+    });
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add("hidden");
+    }
+
+    function copyGasScript() {
+      const code = document.getElementById("gasScriptBlock").innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        showToast("📋 Skrip Google telah disalin ke clipboard!");
+      });
+    }
+
+    function saveWebhookUrl() {
+      const url = document.getElementById("inputGoogleWebhook").value.trim();
+      localStorage.setItem(WEBHOOK_KEY, url);
+      closeModal("modalSyncGuide");
+      showToast("✓ URL Google Sheets berjaya disimpan!");
+    }
+
+    // 10. Utils
+    function showToast(msg) {
+      const toast = document.getElementById("toastMsg");
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3000);
+    }
+
+    function escapeHtml(text) {
+      if (!text) return "";
+      return String(text).replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+      });
+    }
+
+    // 11. Service Worker & PWA Install
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(err => console.warn('SW error:', err));
+    }
+
+    let deferredInstallPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      const btn = document.getElementById('btnInstallApp');
+      if (btn) btn.classList.add('btn-pill-primary');
+    });
+
+    document.getElementById('btnInstallApp').addEventListener('click', async () => {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        const choice = await deferredInstallPrompt.userChoice;
+        if (choice && choice.outcome === 'accepted') {
+          showToast('🌸 Aplikasi CRM berjaya dipasang ke telefon anda!');
+        }
+        deferredInstallPrompt = null;
+      } else {
+        alert("📲 Cara Pasang App ke Skrin Telefon Anda:\n\n1. Android (Google Chrome):\n   Tekan ikon 3 titik di atas kanan pelayar > Pilih 'Install app' (atau 'Add to Home screen').\n\n2. iPhone (Safari):\n   Tekan butang 'Share' di bawah skrin > Pilih 'Add to Home Screen'.\n\nIkon App 'CRM Tetamu' akan terus muncul di skrin telefon anda seperti aplikasi biasa!");
+      }
+    });
+
+    // Run on mount
+    checkAuth();
+  </script>
+</body>
+</html>

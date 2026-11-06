@@ -1,0 +1,9 @@
+{
+  "name": "khairi-joanne",
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/jemputan", "destination": "/jemputan.html" },
+    { "source": "/vip", "destination": "/vip.html" },
+    { "source": "/admin", "destination": "/admin.html" }
+  ]
+}

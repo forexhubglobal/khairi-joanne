@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Penjana Pautan Jemputan VIP Mahligai Kasih · KJ &amp; Joanne</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Cinzel:wght@600&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #FAF7F2;
+      --card: #FFFFFF;
+      --pastel-rose: #C87D85;
+      --pastel-blush: #F4D9DC;
+      --pastel-gold: #CBB068;
+      --border: rgba(220, 195, 185, 0.6);
+      --text: #3E3228;
+      --text-muted: #7A695C;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Montserrat', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+      line-height: 1.6;
+    }
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--text);
+      font-size: 2.2rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    p.sub {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+    label {
+      display: block;
+      margin: 1.2rem 0 0.4rem;
+      color: var(--pastel-rose);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    input, textarea {
+      width: 100%;
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.85rem 1.1rem;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 15px rgba(180, 145, 135, 0.06);
+    }
+    input:focus, textarea:focus {
+      border-color: var(--pastel-rose);
+      box-shadow: 0 0 15px rgba(200, 125, 133, 0.2);
+    }
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 1rem;
+    }
+    button {
+      background: linear-gradient(135deg, #F3D5D8, #E2EADF);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.85rem 1.6rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      box-shadow: 0 6px 18px rgba(180, 145, 135, 0.15);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(200, 125, 133, 0.25);
+      border-color: var(--pastel-rose);
+    }
+    button.alt {
+      background: #FFF;
+      color: var(--text-muted);
+      box-shadow: none;
+    }
+    #out {
+      margin-top: 2rem;
+      display: grid;
+      gap: 12px;
+    }
+    .guest-row {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 6px 18px rgba(180, 145, 135, 0.08);
+    }
+    .guest-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .guest-name {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 1.05rem;
+      font-family: 'Cormorant Garamond', serif;
+      margin-bottom: 2px;
+    }
+    .guest-url {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      word-break: break-all;
+    }
+    .wa-btn {
+      background: #25D366;
+      color: #FFFFFF;
+      text-decoration: none;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      transition: transform 0.2s;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
+    }
+    .wa-btn:hover {
+      transform: scale(1.04);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Penjana Pautan VIP Diraja</h1>
+  <p class="sub">Tampal senarai tetamu untuk menjana pautan peribadi beserta teks jemputan WhatsApp secara automatik.</p>
+
+  <label for="base">Pautan Asas Kad (URL Selepas Deploy)</label>
+  <input id="base" type="url" />
+
+  <label for="names">Senarai Tetamu Kehormat (1 Nama Setiap Baris)</label>
+  <textarea id="names" rows="7" placeholder="YAM Tengku Razak &amp; Keluarga&#10;Dato' Seri Dr. Azman&#10;Encik Farhan &amp; Isteri&#10;Puan Sri Sarah"></textarea>
+
+  <div class="btn-row">
+    <button id="gen">JANA SEMUA PAUTAN</button>
+    <button id="copyAll" class="alt">SALIN UNTUK EXCEL / SHEETS</button>
+    <a href="admin" target="_blank" style="text-decoration:none;">
+      <button type="button" class="alt" style="border-color:var(--pastel-rose); color:var(--pastel-rose);">📊 BUKA PORTAL CRM &amp; RSVP</button>
+    </a>
+  </div>
+
+  <div id="out"></div>
+
+  <script>
+    const base = document.getElementById("base");
+    base.value = "https://khairi-joanne.vercel.app/";
+
+    document.getElementById("gen").onclick = () => {
+      const out = document.getElementById("out");
+      out.innerHTML = "";
+      const raw = document.getElementById("names").value;
+      const list = raw.split("\n").map(s => s.trim()).filter(Boolean);
+
+      const baseUrlClean = (base.value || "https://khairi-joanne.vercel.app").trim().replace(/\/+$/, "");
+
+      list.forEach(name => {
+        const cleanParam = encodeURIComponent(name).replace(/%20/g, "+").replace(/%27/g, "'");
+        const link = `${baseUrlClean}/?to=${cleanParam}`;
+        const message = 
+          `Bismillahir Rahmanir Rahim.\n` +
+          `Assalamualaikum & Salam Sejahtera Yang Berbahagia / Dato' / Datin / Tuan / Puan ${name} 🕊️\n\n` +
+          `Dengan penuh kesyukuran ke hadrat Ilahi, kami berbesar hati menjemput anda hadir ke Majlis Walimatul Urus Mahligai Kasih kami:\n\n` +
+          `🌸 TENGKU AHMAD KHAIRI (KJ)\n` +
+          `& JOANNE HANNAH QALIEYSHA (JOANNE)\n\n` +
+          `📅 Tarikh: Selasa, 29 Disember 2026\n` +
+          `⏰ Masa: 10:00 Pagi – 2:00 Petang\n` +
+          `🏛️ Lokasi: Jawhara Crystal Pavilion, Kuching, Sarawak\n\n` +
+          `Sila layari pautan jemputan khas & Pas Masuk VIP anda di bawah untuk maklumat majlis serta pengesahan kehadiran (RSVP):\n` +
+          `${link}\n\n` +
+          `Kehadiran serta doa restu anda amat bermakna buat kami sekeluarga. Terima kasih. 🤍`;
+
+        const row = document.createElement("div");
+        row.className = "guest-row";
+        row.dataset.rowText = `${name}\t${link}`;
+
+        row.innerHTML = `
+          <div class="guest-info">
+            <div class="guest-name">${name}</div>
+            <div class="guest-url">${link}</div>
+          </div>
+          <a class="wa-btn" href="https://wa.me/?text=${encodeURIComponent(message)}" target="_blank" rel="noopener">
+            WhatsApp 📲
+          </a>
+        `;
+        out.appendChild(row);
+      });
+    };
+
+    document.getElementById("copyAll").onclick = () => {
+      const rows = [...document.querySelectorAll(".guest-row")];
+      if (!rows.length) return alert("Sila jana senarai pautan terlebih dahulu!");
+      const text = rows.map(r => r.dataset.rowText).join("\n");
+      navigator.clipboard.writeText(text).then(() => {
+        alert("✨ Senarai nama & pautan berjaya disalin! Sedia ditampal dalam Excel / Google Sheets.");
+      });
+    };
+  </script>
+</body>
+</html>
