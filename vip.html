@@ -165,7 +165,7 @@
 
   <script>
     const base = document.getElementById("base");
-    base.value = "https://khairi-joanne.vercel.app/";
+    base.value = "https://khairi-joanne.onrender.com/";
 
     document.getElementById("gen").onclick = () => {
       const out = document.getElementById("out");
@@ -173,7 +173,7 @@
       const raw = document.getElementById("names").value;
       const list = raw.split("\n").map(s => s.trim()).filter(Boolean);
 
-      const baseUrlClean = (base.value || "https://khairi-joanne.vercel.app").trim().replace(/\/+$/, "");
+      const baseUrlClean = (base.value || "https://khairi-joanne.onrender.com").trim().replace(/\/+$/, "");
 
       list.forEach(name => {
         const cleanParam = encodeURIComponent(name).replace(/%20/g, "+").replace(/%27/g, "'");
