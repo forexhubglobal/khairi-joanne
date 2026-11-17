@@ -832,7 +832,7 @@
 
   // Calendar
   const calStart = new Date(C.eventStart || "2026-12-29T10:00:00+08:00");
-  const calEnd = new Date(C.eventEnd || "2026-12-29T14:00:00+08:00");
+  const calEnd = new Date(C.eventEnd || "2026-12-29T13:00:00+08:00");
   const formatIcs = (d) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
 
   const btnGoogleCal = $("#btnGoogleCal");
@@ -1502,7 +1502,7 @@
 
     const cells = [
       { lbl: "TARIKH", val: "29 DIS 2026", sub: "SELASA" },
-      { lbl: "MASA", val: "10:00 AM", sub: "HINGGA 2:00 PM" },
+      { lbl: "MASA", val: "10:00 AM", sub: "HINGGA 1:00 PM (KETIBAAN 9:00 AM)" },
       { lbl: "JUMLAH", val: `${pax} PAX`, sub: "TETAMU RASMI" }
     ];
 
