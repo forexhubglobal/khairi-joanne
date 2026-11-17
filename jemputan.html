@@ -176,9 +176,9 @@
       const baseUrlClean = (base.value || "https://www.khairijoanne.com").trim().replace(/\/+$/, "");
 
       list.forEach(name => {
-        const cleanParam = encodeURIComponent(name).replace(/%20/g, "+").replace(/%27/g, "'");
-        const link = `${baseUrlClean}/?to=${cleanParam}`;
-        const cleanSiteUrl = baseUrlClean;
+        const safeName = name.replace(/&/g, "dan").replace(/['’]/g, "").replace(/[^a-zA-Z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+        const paramUnder = safeName.replace(/\s+/g, "_");
+        const link = `${baseUrlClean}/?to=${paramUnder}`;
         const message = 
           `Bismillahir Rahmanir Rahim.\n` +
           `Assalamualaikum Warahmatullahi Wabarakatuh & Salam Sejahtera.\n\n` +
@@ -194,7 +194,7 @@
           `* Tempat: Jawhara Crystal Pavilion, Kuching, Sarawak\n` +
           `* Kod Pakaian: Pastel Lembut / Songket / Batik Kebangsaan\n\n` +
           `Bagi menyempurnakan susunan meja santapan dan Pas Masuk VIP, sukacita dipohon jasa baik pihak Yang Mulia / Yang Berbahagia / Tuan Haji / Puan Hajjah untuk membuat pengesahan kehadiran (RSVP) melalui pautan rasmi di bawah:\n` +
-          `${cleanSiteUrl}\n\n` +
+          `${link}\n\n` +
           `Semoga kehadiran serta limpahan doa restu daripada pihak Yang Mulia / Yang Berbahagia / Tuan Haji / Puan Hajjah akan menambah seri serta keberkatan ikatan suci ini.\n\n` +
           `Sekian, menjunjung kasih dan setinggi-tinggi penghargaan.`;
 

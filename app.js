@@ -16,7 +16,7 @@
   const params = new URLSearchParams(window.location.search);
   const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, "?"));
   const rawParam = params.get("vip") || params.get("to") || params.get("nama") || params.get("tetamu") || hashParams.get("vip") || hashParams.get("to") || hashParams.get("nama") || "";
-  const rawGuest = decodeURIComponent(rawParam.replace(/\+/g, " ")).trim().slice(0, 100);
+  const rawGuest = decodeURIComponent(rawParam.replace(/[\+_]/g, " ")).trim().slice(0, 100);
   const guestName = rawGuest || "Tetamu Terhormat Kami";
 
   if ($("#portalGuestName")) $("#portalGuestName").textContent = guestName;
